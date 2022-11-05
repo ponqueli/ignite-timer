@@ -14,5 +14,5 @@ export const ButtonContainer = styled.button<IButtonContainerProps>`
   margin: 0.5rem;
   font-weight: bold;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.primary};
+  background-color: ${({ theme }) => theme["green-500"]};
 `;
