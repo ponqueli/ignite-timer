@@ -6,13 +6,6 @@ interface IButtonContainerProps {
   variant: ButtonVariant;
 }
 
-const buttonVariants = {
-  primary: "#007bff",
-  secondary: "#6c757d",
-  danger: "#dc3545",
-  success: "#28a745",
-};
-
 export const ButtonContainer = styled.button<IButtonContainerProps>`
   width: 100px;
   height: 50px;
@@ -21,5 +14,5 @@ export const ButtonContainer = styled.button<IButtonContainerProps>`
   margin: 0.5rem;
   font-weight: bold;
   cursor: pointer;
-  background-color: ${({ variant }) => buttonVariants[variant]};
+  background-color: ${({ theme }) => theme.primary};
 `;
