@@ -12,6 +12,7 @@ export const HeaderContainer = styled.header`
     a {
       width: 3rem;
       height: 3rem;
+      border-radius: 8px;
 
       display: flex;
       justify-content: center;
