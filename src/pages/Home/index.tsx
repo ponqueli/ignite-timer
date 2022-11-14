@@ -5,6 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 import { differenceInSeconds } from "date-fns";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   HomeContainer,
   FormContainer,
@@ -89,6 +92,16 @@ export function Home() {
           setAmountSecondsPassed(totalSeconds);
           clearInterval(interval);
           setActiveCycleId(null);
+          toast.success("Tarefa finalizada com sucesso!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
         } else {
           setAmountSecondsPassed(differenceInSecondsValue);
         }
@@ -192,6 +205,18 @@ export function Home() {
           </StartCountdownButton>
         )}
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </HomeContainer>
   );
 }
