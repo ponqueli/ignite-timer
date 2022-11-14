@@ -24,6 +24,11 @@ export const HistoryList = styled.div`
     border-collapse: collapse;
     min-width: 600px;
 
+    thead {
+      position: sticky;
+      top: 0;
+    }
+
     th {
       background-color: ${({ theme }) => theme["gray-600"]};
       padding: 1rem;
@@ -81,5 +86,5 @@ export const Status = styled.span<IStatusProps>`
     height: 0.5rem;
     border-radius: 50%;
     background: ${({ theme, statusColor }) =>
-      theme[STATUS_COLORS[statusColor]]};
+    theme[STATUS_COLORS[statusColor]]};
 `;
