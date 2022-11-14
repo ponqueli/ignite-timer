@@ -1,5 +1,8 @@
 import { Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
+
 import {
   HomeContainer,
   FormContainer,
@@ -10,12 +13,22 @@ import {
   TaskInput,
 } from "./styles";
 
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "Informe a  tarefa"),
+  minutesAmount: zod
+    .number()
+    .min(5, "O tempo mínimo é de 5 minutos")
+    .max(60, "O tempo máximo é de 60 minutos"),
+});
+
 // controlled / uncontrolled
 // register returna onChange, onBlur, onFocus, value, name, ref
 // como ela retorna várias métodos, usa o spreadoperator pra pegar todos os métodos
 // pega todas as informações do register e acopla no input como propriedades
 export function Home() {
-  const { register, handleSubmit, watch } = useForm();
+  const { register, handleSubmit, watch } = useForm({
+    resolver: zodResolver(newCycleFormValidationSchema),
+  });
 
   function handleCreateNewCicle(data: any) {
     console.log(data);
