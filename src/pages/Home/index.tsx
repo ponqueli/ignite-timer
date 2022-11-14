@@ -13,10 +13,10 @@ import {
   TaskInput,
 } from "./styles";
 
-interface INewCycleFormData {
-  minutesAmount: number;
-  task: string;
-}
+// interface INewCycleFormData {
+//   minutesAmount: number;
+//   task: string;
+// }
 
 const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "Informe a  tarefa"),
@@ -26,13 +26,18 @@ const newCycleFormValidationSchema = zod.object({
     .max(60, "O tempo máximo é de 60 minutos"),
 });
 
+type INewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 // controlled / uncontrolled
 // register returna onChange, onBlur, onFocus, value, name, ref
 // como ela retorna várias métodos, usa o spreadoperator pra pegar todos os métodos
 // pega todas as informações do register e acopla no input como propriedades
 export function Home() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch } = useForm<INewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 5,
+    },
   });
 
   function handleCreateNewCicle(data: INewCycleFormData) {
