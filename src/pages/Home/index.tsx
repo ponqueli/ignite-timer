@@ -32,7 +32,7 @@ type INewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 // como ela retorna várias métodos, usa o spreadoperator pra pegar todos os métodos
 // pega todas as informações do register e acopla no input como propriedades
 export function Home() {
-  const { register, handleSubmit, watch } = useForm<INewCycleFormData>({
+  const { register, handleSubmit, watch, reset } = useForm<INewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: {
       task: "",
@@ -42,6 +42,7 @@ export function Home() {
 
   function handleCreateNewCicle(data: INewCycleFormData) {
     console.log(data);
+    reset();
   }
 
   const task = watch("task");
