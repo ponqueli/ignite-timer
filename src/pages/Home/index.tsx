@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 
+import { useState } from "react";
 import {
   HomeContainer,
   FormContainer,
@@ -12,11 +13,6 @@ import {
   MinutesAmountInput,
   TaskInput,
 } from "./styles";
-
-// interface INewCycleFormData {
-//   minutesAmount: number;
-//   task: string;
-// }
 
 const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "Informe a  tarefa"),
@@ -31,7 +27,17 @@ type INewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 // register returna onChange, onBlur, onFocus, value, name, ref
 // como ela retorna várias métodos, usa o spreadoperator pra pegar todos os métodos
 // pega todas as informações do register e acopla no input como propriedades
+
+interface ICycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+}
+
 export function Home() {
+  const [cycles, setCycles] = useState<ICycle[]>([]);
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+
   const { register, handleSubmit, watch, reset } = useForm<INewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: {
@@ -41,12 +47,23 @@ export function Home() {
   });
 
   function handleCreateNewCicle(data: INewCycleFormData) {
-    console.log(data);
+    const id = String(new Date().getTime());
+
+    const newCycle: ICycle = {
+      id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+    };
+
+    setCycles((state) => [...state, newCycle]);
+    setActiveCycleId(id);
+
     reset();
   }
 
   const task = watch("task");
   const isSubmitDisabled = !task;
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   return (
     <HomeContainer>
