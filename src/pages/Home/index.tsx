@@ -20,7 +20,7 @@ const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "Informe a  tarefa"),
   minutesAmount: zod
     .number()
-    .min(5, "O tempo mínimo é de 5 minutos")
+    .min(1, "O tempo mínimo é de 5 minutos")
     .max(60, "O tempo máximo é de 60 minutos"),
 });
 
@@ -36,6 +36,7 @@ interface ICycle {
   minutesAmount: number;
   startDate: Date;
   interruptedDate?: Date;
+  finishedDate?: Date;
 }
 
 export function Home() {
@@ -53,21 +54,51 @@ export function Home() {
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
+
+  const minutesAmount = Math.floor(currentSeconds / 60);
+  const secondsAmount = currentSeconds % 60;
+
+  const minutes = String(minutesAmount).padStart(2, "0");
+  const seconds = String(secondsAmount).padStart(2, "0");
+
   useEffect(() => {
     let interval: number;
 
     if (activeCycle) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate)
+        const differenceInSecondsValue = differenceInSeconds(
+          new Date(),
+          activeCycle.startDate
         );
+
+        if (differenceInSecondsValue >= totalSeconds) {
+          setCycles((state) =>
+            state.map((cycle) => {
+              if (cycle.id === activeCycleId) {
+                return {
+                  ...cycle,
+                  finishedDate: new Date(),
+                };
+              }
+              return cycle;
+            })
+          );
+
+          setAmountSecondsPassed(totalSeconds);
+          clearInterval(interval);
+          setActiveCycleId(null);
+        } else {
+          setAmountSecondsPassed(differenceInSecondsValue);
+        }
       }, 1000);
     }
 
     return () => {
       clearInterval(interval);
     };
-  }, [activeCycle]);
+  }, [activeCycle, totalSeconds, activeCycleId]);
 
   function handleCreateNewCicle(data: INewCycleFormData) {
     const id = String(new Date().getTime());
@@ -87,8 +118,8 @@ export function Home() {
   }
 
   const handleInterruptCycle = () => {
-    setCycles(
-      cycles.map((cycle) => {
+    setCycles((state) =>
+      state.map((cycle) => {
         if (cycle.id === activeCycleId) {
           return {
             ...cycle,
@@ -101,19 +132,8 @@ export function Home() {
     setActiveCycleId(null);
   };
 
-  console.log(cycles);
-
   const task = watch("task");
   const isSubmitDisabled = !task;
-
-  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
-
-  const minutesAmount = Math.floor(currentSeconds / 60);
-  const secondsAmount = currentSeconds % 60;
-
-  const minutes = String(minutesAmount).padStart(2, "0");
-  const seconds = String(secondsAmount).padStart(2, "0");
 
   useEffect(() => {
     if (activeCycle) {
@@ -144,7 +164,7 @@ export function Home() {
             type="number"
             placeholder="00"
             step={5}
-            min={5}
+            min={1}
             max={60}
             disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
