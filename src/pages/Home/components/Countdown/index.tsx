@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { differenceInSeconds } from "date-fns";
 import { CountdownContainer, Separator } from "./styles";
@@ -8,11 +8,12 @@ export function Countdown() {
   const {
     activeCycle,
     activeCycleId,
+    amountSecondsPassed,
     markCurrentCycleAsFinished,
     markNullToActiveCycleId,
+    setSecondsPassed,
   } = useContext(CyclesContext);
 
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
 
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
@@ -36,7 +37,7 @@ export function Countdown() {
         if (differenceInSecondsValue >= totalSeconds) {
           markCurrentCycleAsFinished();
 
-          setAmountSecondsPassed(totalSeconds);
+          setSecondsPassed(totalSeconds);
           clearInterval(interval);
           markNullToActiveCycleId();
           toast.success("Tarefa finalizada com sucesso!", {
@@ -50,7 +51,7 @@ export function Countdown() {
             theme: "dark",
           });
         } else {
-          setAmountSecondsPassed(differenceInSecondsValue);
+          setSecondsPassed(differenceInSecondsValue);
         }
       }, 1000);
     }
@@ -64,11 +65,14 @@ export function Countdown() {
     activeCycleId,
     markCurrentCycleAsFinished,
     markNullToActiveCycleId,
+    setSecondsPassed,
   ]);
 
   useEffect(() => {
     if (activeCycle) {
       document.title = `🔥 ${minutes}:${seconds} 🔥`;
+    } else {
+      document.title = `⏲️ Ignite Timer`;
     }
   }, [activeCycle, minutes, seconds]);
 
