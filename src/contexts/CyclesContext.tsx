@@ -5,7 +5,8 @@ import {
   useReducer,
   useState,
 } from "react";
-import { ActionTypes, cyclesReducer, ICycle } from "../reducers/cycles";
+import { addNewCycleAction, interruptCurrentCycleAction, markCurrentCycleAsFinishedAction } from "../reducers/cycles/actions";
+import { cyclesReducer, ICycle } from "../reducers/cycles/reducer";
 
 interface ICyclesContextType {
   cycles: ICycle[];
@@ -44,12 +45,7 @@ export function CyclesContextProvider({
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   const markCurrentCycleAsFinished = useCallback(() => {
-    dispatch({
-      type: "MARK_CURRENT_CYCLE_AS_FINISHED",
-      payload: {
-        activeCycleId,
-      },
-    });
+    dispatch(markCurrentCycleAsFinishedAction(activeCycleId));
   }, [activeCycleId]);
 
   const setSecondsPassed = useCallback((seconds: number) => {
@@ -66,23 +62,13 @@ export function CyclesContextProvider({
       startDate: new Date(),
     };
 
-    dispatch({
-      type: ActionTypes.ADD_CYCLE,
-      payload: {
-        newCycle,
-      },
-    });
+    dispatch(addNewCycleAction(newCycle));
 
     setAmountSecondsPassed(0);
   }, []);
 
   const interruptCurrentCycle = useCallback(() => {
-    dispatch({
-      type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
-      payload: {
-        activeCycleId,
-      },
-    });
+    dispatch(interruptCurrentCycleAction(activeCycleId));
   }, [activeCycleId]);
 
   const CycleProviderValuesMemoized = useMemo(
