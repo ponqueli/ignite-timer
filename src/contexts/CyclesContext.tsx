@@ -5,7 +5,7 @@ import {
   useReducer,
   useState,
 } from "react";
-import { cyclesReducer, ICycle } from "../reducers/cycles";
+import { ActionTypes, cyclesReducer, ICycle } from "../reducers/cycles";
 
 interface ICyclesContextType {
   cycles: ICycle[];
@@ -67,7 +67,7 @@ export function CyclesContextProvider({
     };
 
     dispatch({
-      type: "ADD_CYCLE",
+      type: ActionTypes.ADD_CYCLE,
       payload: {
         newCycle,
       },
@@ -78,7 +78,7 @@ export function CyclesContextProvider({
 
   const interruptCurrentCycle = useCallback(() => {
     dispatch({
-      type: "INTERRUPT_CURRENT_CYCLE",
+      type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
       payload: {
         activeCycleId,
       },
