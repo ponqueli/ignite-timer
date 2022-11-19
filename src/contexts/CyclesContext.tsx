@@ -1,13 +1,11 @@
-import { createContext, useCallback, useMemo, useState } from "react";
-
-interface ICycle {
-  id: string;
-  task: string;
-  minutesAmount: number;
-  startDate: Date;
-  interruptedDate?: Date;
-  finishedDate?: Date;
-}
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
+import { cyclesReducer, ICycle } from "../reducers/cycles";
 
 interface ICyclesContextType {
   cycles: ICycle[];
@@ -15,7 +13,6 @@ interface ICyclesContextType {
   activeCycleId: string | null;
   amountSecondsPassed: number;
   markCurrentCycleAsFinished: () => void;
-  markNullToActiveCycleId: () => void;
   setSecondsPassed: (seconds: number) => void;
   interruptCurrentCycle: () => void;
   createNewCycle: (data: ICreateCycleData) => void;
@@ -36,27 +33,23 @@ export function CyclesContextProvider({
   children,
 }: ICyclesContextProviderProps) {
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
-  const [cycles, setCycles] = useState<ICycle[]>([]);
-  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+
+  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
+    cycles: [],
+    activeCycleId: null,
+  });
+
+  const { cycles, activeCycleId } = cyclesState;
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
-  const markNullToActiveCycleId = useCallback(() => {
-    setActiveCycleId(null);
-  }, []);
-
   const markCurrentCycleAsFinished = useCallback(() => {
-    setCycles((state) =>
-      state.map((cycle) => {
-        if (cycle.id === activeCycleId) {
-          return {
-            ...cycle,
-            finishedDate: new Date(),
-          };
-        }
-        return cycle;
-      })
-    );
+    dispatch({
+      type: "MARK_CURRENT_CYCLE_AS_FINISHED",
+      payload: {
+        activeCycleId,
+      },
+    });
   }, [activeCycleId]);
 
   const setSecondsPassed = useCallback((seconds: number) => {
@@ -73,25 +66,24 @@ export function CyclesContextProvider({
       startDate: new Date(),
     };
 
-    setCycles((state) => [...state, newCycle]);
-    setActiveCycleId(id);
+    dispatch({
+      type: "ADD_CYCLE",
+      payload: {
+        newCycle,
+      },
+    });
+
     setAmountSecondsPassed(0);
   }, []);
 
   const interruptCurrentCycle = useCallback(() => {
-    setCycles((state) =>
-      state.map((cycle) => {
-        if (cycle.id === activeCycleId) {
-          return {
-            ...cycle,
-            interruptedDate: new Date(),
-          };
-        }
-        return cycle;
-      })
-    );
-    markNullToActiveCycleId();
-  }, [activeCycleId, markNullToActiveCycleId]);
+    dispatch({
+      type: "INTERRUPT_CURRENT_CYCLE",
+      payload: {
+        activeCycleId,
+      },
+    });
+  }, [activeCycleId]);
 
   const CycleProviderValuesMemoized = useMemo(
     () => ({
@@ -100,7 +92,6 @@ export function CyclesContextProvider({
       activeCycleId,
       amountSecondsPassed,
       markCurrentCycleAsFinished,
-      markNullToActiveCycleId,
       setSecondsPassed,
       interruptCurrentCycle,
       createNewCycle,
@@ -111,7 +102,6 @@ export function CyclesContextProvider({
       activeCycleId,
       amountSecondsPassed,
       markCurrentCycleAsFinished,
-      markNullToActiveCycleId,
       setSecondsPassed,
       interruptCurrentCycle,
       createNewCycle,
