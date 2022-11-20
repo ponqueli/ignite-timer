@@ -15,7 +15,7 @@ export function addNewCycleAction(newCycle: ICycle) {
   };
 }
 
-export function interruptCurrentCycleAction(activeCycleId: string) {
+export function interruptCurrentCycleAction(activeCycleId: string | null) {
   return {
     type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
     payload: {
@@ -24,7 +24,7 @@ export function interruptCurrentCycleAction(activeCycleId: string) {
   };
 }
 
-export function markCurrentCycleAsFinishedAction(activeCycleId: string) {
+export function markCurrentCycleAsFinishedAction(activeCycleId: string | null) {
   return {
     type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
     payload: {

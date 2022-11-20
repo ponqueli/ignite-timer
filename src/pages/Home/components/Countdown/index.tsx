@@ -10,7 +10,6 @@ export function Countdown() {
     activeCycleId,
     amountSecondsPassed,
     markCurrentCycleAsFinished,
-    markNullToActiveCycleId,
     setSecondsPassed,
   } = useContext(CyclesContext);
 
@@ -31,7 +30,7 @@ export function Countdown() {
       interval = setInterval(() => {
         const differenceInSecondsValue = differenceInSeconds(
           new Date(),
-          activeCycle.startDate
+          new Date(activeCycle.startDate)
         );
 
         if (differenceInSecondsValue >= totalSeconds) {
@@ -39,7 +38,6 @@ export function Countdown() {
 
           setSecondsPassed(totalSeconds);
           clearInterval(interval);
-          markNullToActiveCycleId();
           toast.success("Tarefa finalizada com sucesso!", {
             position: "top-right",
             autoClose: 5000,
@@ -64,7 +62,6 @@ export function Countdown() {
     totalSeconds,
     activeCycleId,
     markCurrentCycleAsFinished,
-    markNullToActiveCycleId,
     setSecondsPassed,
   ]);
 
