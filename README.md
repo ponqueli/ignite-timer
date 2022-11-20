@@ -17,8 +17,8 @@
 ## Visão geral do projeto
 
 <div align="center">
-  <img src="github/images/preview.png" alt="project preview" width="816" height="380">
-  <img src="github/images/preview2.png" alt="project preview" width="816" height="380">  
+  <img src="github/images/preview.png" alt="project preview" width="816" height="400">
+  <img src="github/images/preview2.png" alt="project preview" width="816" height="400">  
 </div>
 <div align="center">
   <h3>
