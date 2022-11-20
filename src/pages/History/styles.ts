@@ -61,6 +61,30 @@ export const HistoryList = styled.div`
       &:last-child {
         padding-right: 1.5rem;
       }
+
+      button {   
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: transparent;
+        border: 0;
+        color: ${({ theme }) => theme["gray-100"]};
+        font-size: 0.875rem;
+        line-height: 1.6;
+        transition: color 0.2s;
+        
+        &:hover {
+          color: ${({ theme }) => theme["red-500"]};
+
+          svg {
+            stroke: ${({ theme }) => theme["red-500"]};
+
+          }
+        }
+      }
+
     }
   }
 `;
