@@ -2,7 +2,7 @@
   <div>
     <img src="github/images/logo.svg" alt="Logo" width="100" height="50">
   </div>
-  <h4 align="center">🔥 Ignite Timer 🔥 - Countdown timer built in React.</h4>
+  <h4 align="center">🔥 Ignite Timer 🔥 - Contador em React.</h4>
 </div>
 
 ## Resumo
